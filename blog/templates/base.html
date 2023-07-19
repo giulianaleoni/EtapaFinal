@@ -33,13 +33,13 @@
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">Home</a>
+                            <a class="nav-link" href={% url 'index' %}>Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about.html">Acerca de</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="shop.html">Categorias</a>
+                            <a class="nav-link" href={% url 'apps.posts:posts' %}>Posts</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contacto</a>

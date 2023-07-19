@@ -12,7 +12,7 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model= Post
-    template_name = "posts'/postindividual.html"
+    template_name = "posts/postindividual.html"
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
