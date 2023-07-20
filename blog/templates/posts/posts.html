@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
+{%load static%}
 
 {%block contenido%}
  
     {%for i in posts%}
         <br>
         <li>{{ i.titulo }}</li>
-        <li>{{i.subtilo}}</li>
+        <li>{{i.subtitulo}}</li>
         <li>{{i.categoria}}</li>
-
+        <br>
+        <a id="boton_post" href= "{% url 'apps.posts:postindividual' i.id %}">
+            Ingresa a este post
+        </a>
+        
         {%empty%}
         <h1>No hay registros</h1>
 
@@ -16,5 +21,5 @@
     <br>
     <h1>Otro html</h1>
     <h1>con otro contenido</h1>
-    
+
 {%endblock%}
