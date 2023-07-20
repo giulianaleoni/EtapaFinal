@@ -19,3 +19,4 @@ class LoginForm(forms.Form):
         user= authenticate(request,username=username,password=password)
         if user:
             login(request,user)
+            
