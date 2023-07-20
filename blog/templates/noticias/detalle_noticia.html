@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{%block contenido%}
+
+<head>
+    <title>Detalle de Noticia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>{{ noticia.titulo }}</h1>
+        <p>{{ noticia.contenido }}</p>
+        <p>Fecha de publicación: {{ noticia.fecha_publicacion|date:"d/m/Y H:i:s" }}</p>
+        <a href="{% url 'noticias:noticias' %}" class="btn btn-primary">Regresar</a>
+    </div>
+</body>
+
+
+
+
+
+{%endblock contenido%}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+
+<!-- 
+
+<div class="container mt-5">
+    <h1 class="mb-4">Lista de Noticias</h1>
+    <div class="d-flex justify-content-end mb-3">
+    </div>
+    <ul class="list-group">
+        {% for noticia in noticias %}
+        <li class="list-group-item">
+            <h5 class="mb-1">{{ noticia.titulo }}</h5>
+            <small>{{ noticia.fecha_publicacion|date:"d/m/Y H:i:s" }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+</div> -->
+
+{%block contenido%}
+
+<head>
+    <title>Lista de Noticias</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Lista de Noticias</h1>
+        <div class="d-flex justify-content-end mb-3">
+            <!-- Agregar aquí el código para el botón de ordenar por fecha o alfabéticamente -->
+        </div>
+        <ul class="list-group">
+            {% for noticia in noticias %}
+            <li class="list-group-item">
+                <a href="{% url 'noticias:detalle_noticia' noticia.pk %}">
+                    <h5 class="mb-1">{{ noticia.titulo }}</h5>
+                </a>
+                <small>{{ noticia.fecha_publicacion|date:"d/m/Y H:i:s" }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+
+
+
+
+
+<!-- ========== Start Section ========== -->
+<!-- ========== End Section ========== -->
+<!-- Start Featured Product -->
+<!-- <section class="bg-light">
+    <div class="container py-5">
+        <div class="row text-center py-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Noticias</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="shop-single.html">
+                        <img src="./assets/img/feature_prod_01.jpg" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <ul class="list-unstyled d-flex justify-content-between">
+                            <li>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                            </li>
+                        </ul>
+                        <a href="shop-single.html" class="h2 text-decoration-none text-dark">Gym Weight</a>
+                        <p class="card-text">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia
+                            deserunt.
+                        </p>
+                        <p class="text-muted">Reviews (24)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="shop-single.html">
+                        <img src="./assets/img/feature_prod_02.jpg" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <ul class="list-unstyled d-flex justify-content-between">
+                            <li>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                            </li>
+                            <li class="text-muted text-right">$480.00</li>
+                        </ul>
+                        <a href="shop-single.html" class="h2 text-decoration-none text-dark">Cloud Nike Shoes</a>
+                        <p class="card-text">
+                            Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo
+                            ullamcorper.
+                        </p>
+                        <p class="text-muted">Reviews (48)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="shop-single.html">
+                        <img src="./assets/img/feature_prod_03.jpg" class="card-img-top" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <ul class="list-unstyled d-flex justify-content-between">
+                            <li>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                            </li>
+                            <li class="text-muted text-right">$360.00</li>
+                        </ul>
+                        <a href="shop-single.html" class="h2 text-decoration-none text-dark">Summer Addides
+                            Shoes</a>
+                        <p class="card-text">
+                            Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et
+                            scelerisque ipsum lobortis nec.
+                        </p>
+                        <p class="text-muted">Reviews (74)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+<!-- End Featured Product -->
+
+
+
+{%endblock contenido%}
