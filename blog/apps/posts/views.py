@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
 from .forms import PostForm  # Asegúrate de crear este formulario
+from .models import Post , Categoria
 from django.views.generic import ListView, DetailView
-
 
 # Create your views here.
 
@@ -17,10 +16,11 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
- 
+
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
     form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
+
 
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -34,3 +34,8 @@ def editarPost(request, id):
             return redirect('apps.posts:postindividual', id=id)
 
     return render(request, 'posts/editarPost.html', {'form': form})
+
+def index (request):
+    categorias = Categoria.objects.all()
+    post = Post.objects.order_by('-publicado')[:3]
+    return render(request, 'index.html' ,{'categorias':categorias,'post':post})
