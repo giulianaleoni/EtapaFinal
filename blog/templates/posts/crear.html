@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+<h2>Agregar Post</h2>
+<form action="" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Guardar cambios</button>
+    <a href="{% url 'apps.posts:posts'%}" class="btn btn-primary">Volver</a>
+</form>
+{% endblock %}

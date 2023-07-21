@@ -23,7 +23,7 @@ class Post(models.Model):
     categoria = models.ForeignKey(
         Categoria, on_delete=models.SET_NULL, null=True, default='Sin Categoria')
     imagen = models.ImageField(
-        null=True, blank=True, upload_to='media', default='static/post_default.png')
+        null=True, blank=True, upload_to='media/', default='static/post_default.png')
     publicado = models.DateTimeField(default=timezone.now)
 
     class Meta:

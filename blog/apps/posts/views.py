@@ -24,10 +24,8 @@ class PostDetailView(DetailView):
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
     form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
-
-
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post.titulo = form.cleaned_data['titulo']
             post.subtitulo = form.cleaned_data['subtitulo']
@@ -36,13 +34,12 @@ def editarPost(request, id):
             post.imagen = form.cleaned_data['imagen']
             post.save()
             return redirect('apps.posts:postindividual', id=id)
-
+    
     return render(request, 'posts/editarPost.html', {'form': form})
 
 def index(request):
     categorias = Categoria.objects.all()
-    post = Post.objects.order_by('publicado')[:3]
-    print(post)
+    post = Post.objects.order_by('-publicado')[:3]
     return render(request, 'index.html', {'categorias': categorias, 'post': post})
 
 # *Metodo para obtener Todos Los Posts de Una Categoria Especifica
@@ -68,3 +65,13 @@ def existe_categoria(id):
             return i
     return None
 
+def agregarPost(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            form.clean()
+            return redirect('apps.posts:posts')
+    else:
+        form = PostForm()
+    return render(request, 'posts/crear.html', {'form': form})
