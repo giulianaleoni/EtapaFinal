@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 # Create your views here.
+app_name = 'apps.posts'
 
 class PostListView(ListView):
     model = Post
@@ -75,3 +76,12 @@ def agregarPost(request):
     else:
         form = PostForm()
     return render(request, 'posts/crear.html', {'form': form})
+
+def eliminarPost(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect('apps.posts:posts')
+
+    return render(request, 'posts/eliminarPost.html', {'post': post})
