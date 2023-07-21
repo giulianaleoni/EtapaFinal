@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'apps.posts',
     'apps.contacto',
+    'apps.usuario',
 ]
 
 MIDDLEWARE = [
@@ -94,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTH_USER_MODEL = 'usuario.Usuario'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -120,3 +121,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),'media')
+
