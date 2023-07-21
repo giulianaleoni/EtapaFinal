@@ -58,7 +58,9 @@
             </div>
             
             {% empty %}
+            <div class="container text-center">
             <span class="text-secondary display-4">Aun No exite ningun Posteo en la Pagina</span>  
+        </div>
             {% endfor %}        
         
     </div>
@@ -71,7 +73,7 @@
             <a href="{% url 'apps.posts:categoria' i.id %}" class="col-xs-12  col-md col-sm my-3 p-3 mx-1 btn btn-success fw-semibold">{{ i.nombre }}</a>
         </div>
         {% empty %}
-        <span class="text-warning"> No Hay Categorias Registradas</span>
+        <span class="text-warning py-3 fw-semibold fs-2"> No Hay Categorias Registradas por el momento</span>
         {% endfor %}
     </div>
 
