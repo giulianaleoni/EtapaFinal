@@ -5,8 +5,8 @@
     {{ categoria.nombre }}
 </h5>
 {% for i in posts %}
-<div class="row m-3">
-    <div class="card col-6 text-center my-1" style="width: 20rem;">
+<div style="display: flex;">
+    <div class=" card col-3 text-center my-1" style="width: 20rem;">
         <img src="{{ i.imagen.url}}" class="card-img-top img-fluid rounded float-start text-center" alt="...">
         <div class="card-body">
             <h5 class="card-title">{{ i.titulo }}</h5>
