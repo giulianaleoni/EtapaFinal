@@ -10,7 +10,7 @@ from django.urls import reverse
 
 class RegistrarUsuario(CreateView):
     template_name='registration/registrar.html'
-    form_class= RegistrarUsuarioForm
+    form_class= RegistroUsuarioform
 
     def  form_valid(self,form):
         messages.success(self.request, 'Registro exitoso. Por favor inicia sesión.')
