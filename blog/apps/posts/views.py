@@ -17,14 +17,20 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
+ 
+def editarPost(request, id):
+    post = get_object_or_404(Post, id=id)
+    form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
 
-def actualizar_noticia(request, pk):
-    post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES, instance=post)
+        form = PostForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('posts')
-        else:
-            form = PostForm(instance=post)
-        return render(request, 'posts/post_form.html', {'form' : form})
+            post.titulo = form.cleaned_data['titulo']
+            post.subtitulo = form.cleaned_data['subtitulo']
+            post.texto = form.cleaned_data['texto']
+            post.categoria = form.cleaned_data['categoria']
+            post.imagen = form.cleaned_data['imagen']
+            post.save()
+            return redirect('apps.posts:postindividual', id=id)
+
+    return render(request, 'posts/editarPost.html', {'form': form})
