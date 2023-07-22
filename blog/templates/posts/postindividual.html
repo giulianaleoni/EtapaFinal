@@ -20,7 +20,7 @@
                 <p>Fecha de publicación: {{ posts.fecha|date:"d/m/Y H:i:s" }}</p>
                 <a href="{% url 'apps.posts:posts' %}" class="btn btn-primary">Regresar</a>
                 <a href="{% url 'apps.posts:editar' posts.id %}" class="btn btn-warning">Modificar</a>
-                <a href="" class="btn btn-danger">Eliminar</a>
+                <a href="{% url 'apps.posts:eliminar' posts.id %}" class="btn btn-danger">Eliminar</a>
             </div>
         </div>
     </div>
