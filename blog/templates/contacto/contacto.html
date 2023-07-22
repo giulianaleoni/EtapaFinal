@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+<h2>Contactanos</h2>
+<form action="" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Enviar</button>
+    <a href="{% url 'apps.posts:index'%}" class="btn btn-primary">Volver</a>
+</form>
+{% endblock %}

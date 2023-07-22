@@ -36,7 +36,7 @@ def editarPost(request, id):
             post.save()
             return redirect('apps.posts:postindividual', id=id)
     
-    return render(request, 'posts/editarPost.html', {'form': form})
+    return render(request, 'posts/editarPost.html', {'form': form , 'post':post.id})
 
 def index(request):
     categorias = Categoria.objects.all()

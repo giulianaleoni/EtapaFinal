@@ -46,3 +46,6 @@ class LogoutUsuario(LogoutView):
     def get_next_page(self):
         return reverse('login')
     
+
+def acercaDe(request):
+    return render(request,'about.html')
