@@ -2,12 +2,6 @@
 {%load static%}
 
 {%block contenido%}
-
-<head>
-    <title>Lista de Posts</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
-</head>
-
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Lista de Posts</h1>
@@ -33,29 +27,4 @@
         </ul>
     </div>
 </body>
-
-
-
-
-
-
-<!-- {%for i in posts%}
-<br>
-<li>{{ i.titulo }}</li>
-<li>{{i.subtitulo}}</li>
-<li>{{i.categoria}}</li>
-<br>
-<a id="boton_post" href="{% url 'apps.posts:postindividual' i.id %}">
-    Ingresa a este post
-</a>
-
-{%empty%}
-<h1>No hay registros</h1>
-
-{%endfor%}
-
-<br>
-<h1>Otro html</h1>
-<h1>con otro contenido</h1> -->
-
 {%endblock%}

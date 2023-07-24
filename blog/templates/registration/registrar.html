@@ -4,7 +4,7 @@
 <div class="container text-start" >
     <h3>{{  mensaje }}</h3>
     <div class="row">
-        <form action="{{ action_url }}" method="post">
+        <form action="{{ action_url }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
             <div class="row">                

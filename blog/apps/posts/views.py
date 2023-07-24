@@ -21,6 +21,9 @@ class PostDetailView(DetailView):
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
 
+def postUser(request):
+    postsUser = Post.objects.filter(usuario = request.user)
+    return render(request , 'posts/Misposts.html',{'posts':postsUser})
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
@@ -70,8 +73,11 @@ def agregarPost(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            form.clean()
+            post =form.save(commit=False)
+            ##Trae al Usuario Logeado
+            post.usuario = request.user
+            post.save()
+            post.clean()
             return redirect('apps.posts:posts')
     else:
         form = PostForm()

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from apps.usuario.models import Usuario
 # Create your models here.
 
 
@@ -25,6 +26,7 @@ class Post(models.Model):
     imagen = models.ImageField(
         null=True, blank=True, upload_to='media/', default='static/post_default.png')
     publicado = models.DateTimeField(default=timezone.now)
+    usuario = models.ForeignKey(Usuario, on_delete= models.CASCADE,)
 
     class Meta:
         ordering = ('-publicado',)

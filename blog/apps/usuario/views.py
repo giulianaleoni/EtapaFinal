@@ -14,7 +14,7 @@ class RegistrarUsuario(CreateView):
 
     def  form_valid(self,form):
         messages.success(self.request, 'Registro exitoso. Por favor inicia sesión.')
-        form.save()
+        form.save()        
         next_url = self.request.GET.get('next')
         if next_url:
             self.request.session['next']=next_url
