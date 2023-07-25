@@ -7,3 +7,5 @@ platformdirs==3.7.0
 sqlparse==0.4.4
 tzdata==2023.3
 virtualenv==20.23.1
+mysqlclient==2.2.0
+pillow

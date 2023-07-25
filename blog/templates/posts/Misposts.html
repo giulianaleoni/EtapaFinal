@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{%block contenido%}
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Lista de Posts</h1>
+        {% if user.is_authenticated %}
+        <a href="{% url 'apps.posts:agregar' %}" class="btn btn-primary">Agregar</a>
+        {% endif %}
+        <div class="d-flex justify-content-end mb-3">
+        </div>
+        <ul class="list-group">
+            {% for post in posts%}
+            {% if post.activo %}
+            <li class="list-group-item">
+                <a href="{% url 'apps.posts:postindividual' post.pk %}">
+                    <h5 class="mb-1">{{ post.titulo }}</h5>
+                </a>
+                <small>{{ posts.fecha|date:"d/m/Y H:i:s" }}</small>
+            </li>
+            <li>{{post.subtitulo}}</li>
+            <li>{{post.categoria}}</li>
+            {% endif %}
+
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+{%endblock%}

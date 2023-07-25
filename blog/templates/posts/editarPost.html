@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+  <h2>Editar Post</h2>
+  <form action="" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a href="{% url 'apps.posts:postindividual' post %}" class="btn btn-primary">Cancelar</a>
+    <button type="submit" class="btn btn-success">Guardar cambios</button>
+  </form>
+{% endblock %}

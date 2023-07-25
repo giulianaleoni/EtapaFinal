@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{%block contenido%}
+<h1>
+{{ mensaje }}
+</h1>
+<div class="text-center row" style="width: 25%; margin: auto;height: 40vh;" >
+    <form action="" method="POST" role="form">
+        {% csrf_token %}
+        <div class=" text-start d-grid gap-2">
+            {{ form }}            
+        <button class="btn btn-primary" type="submit">Iniciar sesion</button>
+        <a href="{% url 'apps.usuario:registrar' %}">No tienes cuenta? Click Aqui</a>
+    </div>
+    </form>
+</div>
+{%endblock contenido%}
