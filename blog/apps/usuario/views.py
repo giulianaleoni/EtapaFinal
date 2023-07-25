@@ -14,7 +14,7 @@ class RegistrarUsuario(CreateView):
 
     def  form_valid(self,form):
         messages.success(self.request, 'Registro exitoso. Por favor inicia sesión.')
-        form.save()
+        form.save()        
         next_url = self.request.GET.get('next')
         if next_url:
             self.request.session['next']=next_url
@@ -33,18 +33,17 @@ class LoginUsuario(LoginView):
         else:
             messages.success(self.request,'Login exitoso.'
         )
-        return reverse('index')
+        return reverse('apps.posts:index')
 
 class LogoutUsuario(LogoutView):
     template_name='registration/logout.html'
-    
     def dispatch(self, request, *args, **kwargs):
         response= super().dispatch(request, *args, **kwargs)
         messages.success(request,'Logout exitoso')
-        return response
+        return redirect('apps.usuario:login')
     
     def get_next_page(self):
-        return reverse('login')
+        return reverse('apps.usuario:login')
     
 
 def acercaDe(request):
