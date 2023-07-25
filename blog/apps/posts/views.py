@@ -1,9 +1,13 @@
 
+from typing import Any, Dict
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm  # Asegúrate de crear este formulario
-from .models import Post , Categoria
+from .forms import PostForm, ComentarioForm  # Asegúrate de crear este formulario
+from .models import Post , Categoria, Comentario
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -20,6 +24,36 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ComentarioForm()
+        context['comentarios'] = Comentario.objects.filter(posts_id = self.kwargs['id'])
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.post_id = self.kwargs['id']
+            comentario.save()
+            return redirect('apps.posts:postindividual', id=self.kwargs['id'])
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context)
+
+class ComentarioCreateView(LoginRequiredMixin, CreateView):
+    model = Comentario
+    form_class = ComentarioForm
+    template_name = 'comentario/agregarComentario.html'
+    success_url = 'comentario/comentarios'
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        form.instance.posts_id = self.kwargs['posts_id']
+        return super().form_valid(form)
 
 def postUser(request):
     postsUser = Post.objects.filter(usuario = request.user)
