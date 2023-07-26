@@ -1,11 +1,15 @@
 
+from typing import Any, Dict
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm  # Asegúrate de crear este formulario
-from .models import Post, Categoria
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
 from django.utils import timezone
-from django.shortcuts import redirect
+from .forms import PostForm, ComentarioForm  # Asegúrate de crear este formulario
+from .models import Post , Categoria, Comentario
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -37,6 +41,36 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = ComentarioForm()
+        context['comentarios'] = Comentario.objects.filter(posts_id = self.kwargs['id'])
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.usuario = request.user
+            comentario.posts_id = self.kwargs['id']
+            comentario.save()
+            return redirect('apps.posts:postindividual', id=self.kwargs['id'])
+        else:
+            context = self.get_context_data(**kwargs)
+            context['form'] = form
+            return self.render_to_response(context)
+
+class ComentarioCreateView(LoginRequiredMixin, CreateView):
+    model = Comentario
+    form_class = ComentarioForm
+    template_name = 'comentario/agregarComentario.html'
+    success_url = 'comentario/comentarios'
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        form.instance.posts_id = self.kwargs['posts_id']
+        return super().form_valid(form)
 
 
 def postUser(request):
@@ -64,8 +98,12 @@ def postUser(request):
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
-    form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo,
-                    'texto': post.texto, 'categoria': post.categoria, 'imagen': post.imagen})
+#comprueba el permiso de edicion
+    if not post.puede_editar(request.user):
+        messages.error(request, 'No tienes permiso para editar este post.')
+        return redirect('apps.posts:postindividual', id=id)
+
+    form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -75,6 +113,7 @@ def editarPost(request, id):
             post.categoria = form.cleaned_data['categoria']
             post.imagen = form.cleaned_data['imagen']
             post.save()
+            messages.success(request, 'El post ha sido editado correctamente.')
             return redirect('apps.posts:postindividual', id=id)
 
     return render(request, 'posts/editarPost.html', {'form': form, 'post': post.id})
@@ -127,8 +166,14 @@ def agregarPost(request):
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
+# Comprueba permisos de eliminación
+    if not post.puede_eliminar(request.user):
+        messages.error(request, 'No tienes permiso para eliminar este post.')
+        return redirect('apps.posts:posts')
+##
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'El post ha sido eliminado correctamente.')
         return redirect('apps.posts:posts')
 
     return render(request, 'posts/eliminarPost.html', {'post': post})

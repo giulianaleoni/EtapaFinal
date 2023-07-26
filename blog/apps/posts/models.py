@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from apps.usuario.models import Usuario
 from django.shortcuts import render
+from django.conf import settings
+
 # Create your models here.
 
 
@@ -35,6 +37,28 @@ class Post(models.Model):
     def __str__(self):
         return self.titulo
 
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
+
     def delete(self, using=None, keep_parents=False):
         self.imagen.delete(self.imagen.name)
         super().delete()
+
+
+class Comentario(models.Model):
+    posts = models.ForeignKey('posts.Post', on_delete=models.CASCADE, related_name='comentarios')
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios')
+    texto = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def __str__(self):
+        return self.texto

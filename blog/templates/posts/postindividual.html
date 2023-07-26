@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{%block contenido%}
-
-
 <head>
-    <title>Detalle del post</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+    <title> {% block title %} {{ posts.titulo }}{% endblock title %} </title>
+
 </head>
 
 <body>
@@ -28,9 +25,44 @@
             </div>
         </div>
 
+
     </div>
 
-</body>
 
-
-{%endblock contenido%}
+<center>
+    <div class="countainer-fluid" style="margin-bottom: 20px;">
+        <h4>Comentarios</h4>
+        <br><br>
+    </div>
+    <div class="countainer-fluid" style="margin-bottom: 20px;"></div>
+    {% for comentario in comentarios %}
+    <table>{{ comentario.usuario }} - {{ comentario.fecha }}</table>
+    <ul class="w-100 list.unstyled d-flex justify-content-between mb-0">
+        <p>{{ comentario.texto }}</p>
+        <br><br>
+    </ul>
+    {% empty %}
+    <li>No hay comentarios - Puedes ser el primero en comentar!</li>
+    {% endfor %}
+    </div>
+    <a id="comentario"></a>
+    <div class="countainer-fluid" style="margin-bottom: 100px;">
+        <form method="POST" style="margin-bottom: 100px; margin-top: 100px;">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+            <h2>Deja tu comentario</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Comentar">
+            </form>
+            {% else %}
+            <h2>Debes iniciar sesión o registrarte para comentar</h2>
+            <a class="btn btn-sucess btn-lg"
+                href="{% url 'apps.usuario:login' %}? next={{ request.path }}#comentario">Iniciar sesión</a>
+            <input type="hidden" name="next" value="{{request.path}}">
+            {% endif %}
+        </form>
+    </div>
+</center>
+{% endblock %}
