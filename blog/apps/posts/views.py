@@ -86,7 +86,7 @@ def postUser(request):
         return render(request, 'posts/Misposts.html', {'posts': postsorder})
     elif sort_param == 'a':
         postsorder = Post.objects.filter(
-            usuario=request.user).order_by('titulo')
+            usuario=request.user).order_by('titulo') 
         return render(request, 'posts/Misposts.html', {'posts': postsorder})
     elif sort_param == 'z':
         postsorder = Post.objects.filter(
@@ -132,8 +132,8 @@ def requestCategoria(request, id):
         categoria = existe_categoria(id)
         posts = Post.objects.all().filter(categoria=id)
     except Exception:
-        categoria = Categoria.objects.get(id=id)
-        posts = Post.objects.all().filter(categoria=id)
+         categoria = Categoria.objects.get(id=id)
+         posts = Post.objects.all().filter(categoria=id)
     context = {
         'categoria': categoria,
         'posts': posts
@@ -166,11 +166,11 @@ def agregarPost(request):
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
-# Comprueba permisos de eliminación
+ # Comprueba permisos de eliminación
     if not post.puede_eliminar(request.user):
         messages.error(request, 'No tienes permiso para eliminar este post.')
         return redirect('apps.posts:posts')
-##
+ ##
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'El post ha sido eliminado correctamente.')
