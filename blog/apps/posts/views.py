@@ -36,7 +36,7 @@ class PostDetailView(DetailView):
         if form.is_valid():
             comentario = form.save(commit=False)
             comentario.usuario = request.user
-            comentario.post_id = self.kwargs['id']
+            comentario.posts_id = self.kwargs['id']
             comentario.save()
             return redirect('apps.posts:postindividual', id=self.kwargs['id'])
         else:
