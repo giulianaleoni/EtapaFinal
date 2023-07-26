@@ -8,14 +8,30 @@ from .models import Post , Categoria, Comentario
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # Create your views here.
 app_name = 'apps.posts'
+
 
 class PostListView(ListView):
     model = Post
     template_name = "posts/posts.html"
     context_object_name = "posts"
+
+    def get_queryset(self):
+        # Obtener el valor del parámetro 'sort' de la URL
+        sort_order = self.request.GET.get('sort', 'desc')
+
+        # Cambiar el orden de acuerdo al valor del parámetro 'sort'
+        if sort_order == 'asc':
+            return Post.objects.filter(activo=True).order_by('fecha')
+        elif sort_order == 'a':
+            return Post.objects.filter(activo=True).order_by('titulo')
+        elif sort_order == 'z':
+            return Post.objects.filter(activo=True).order_by('-titulo')
+        else:
+            return Post.objects.filter(activo=True).order_by('-fecha')
 
 
 class PostDetailView(DetailView):
@@ -24,7 +40,7 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ComentarioForm()
@@ -36,7 +52,7 @@ class PostDetailView(DetailView):
         if form.is_valid():
             comentario = form.save(commit=False)
             comentario.usuario = request.user
-            comentario.post_id = self.kwargs['id']
+            comentario.posts_id = self.kwargs['id']
             comentario.save()
             return redirect('apps.posts:postindividual', id=self.kwargs['id'])
         else:
@@ -55,12 +71,37 @@ class ComentarioCreateView(LoginRequiredMixin, CreateView):
         form.instance.posts_id = self.kwargs['posts_id']
         return super().form_valid(form)
 
+
 def postUser(request):
-    postsUser = Post.objects.filter(usuario = request.user)
-    return render(request , 'posts/Misposts.html',{'posts':postsUser})
+    postsUser = Post.objects.filter(usuario=request.user)
+    sort_param = request.GET.get('sort')
+    if sort_param == 'asc':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('fecha')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'desc':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('-fecha')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'a':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('titulo')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'z':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('-titulo')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    else:
+        return render(request, 'posts/Misposts.html', {'posts': postsUser})
+
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
+#comprueba el permiso de edicion
+    if not post.puede_editar(request.user):
+        messages.error(request, 'No tienes permiso para editar este post.')
+        return redirect('apps.posts:postindividual', id=id)
+
     form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -71,9 +112,11 @@ def editarPost(request, id):
             post.categoria = form.cleaned_data['categoria']
             post.imagen = form.cleaned_data['imagen']
             post.save()
+            messages.success(request, 'El post ha sido editado correctamente.')
             return redirect('apps.posts:postindividual', id=id)
-    
-    return render(request, 'posts/editarPost.html', {'form': form , 'post':post.id})
+
+    return render(request, 'posts/editarPost.html', {'form': form, 'post': post.id})
+
 
 def index(request):
     categorias = Categoria.objects.all()
@@ -103,12 +146,13 @@ def existe_categoria(id):
             return i
     return None
 
+
 def agregarPost(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post =form.save(commit=False)
-            ##Trae al Usuario Logeado
+            post = form.save(commit=False)
+            # Trae al Usuario Logeado
             post.usuario = request.user
             post.save()
             post.clean()
@@ -117,11 +161,18 @@ def agregarPost(request):
         form = PostForm()
     return render(request, 'posts/crear.html', {'form': form})
 
+
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
+# Comprueba permisos de eliminación
+    if not post.puede_eliminar(request.user):
+        messages.error(request, 'No tienes permiso para eliminar este post.')
+        return redirect('apps.posts:posts')
+##
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'El post ha sido eliminado correctamente.')
         return redirect('apps.posts:posts')
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
