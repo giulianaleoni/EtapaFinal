@@ -3,6 +3,7 @@ from typing import Any, Dict
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from .forms import PostForm, ComentarioForm  # Asegúrate de crear este formulario
 from .models import Post , Categoria, Comentario
 from django.shortcuts import render
@@ -13,10 +14,25 @@ from django.contrib import messages
 # Create your views here.
 app_name = 'apps.posts'
 
+
 class PostListView(ListView):
     model = Post
     template_name = "posts/posts.html"
     context_object_name = "posts"
+
+    def get_queryset(self):
+        # Obtener el valor del parámetro 'sort' de la URL
+        sort_order = self.request.GET.get('sort', 'desc')
+
+        # Cambiar el orden de acuerdo al valor del parámetro 'sort'
+        if sort_order == 'asc':
+            return Post.objects.filter(activo=True).order_by('fecha')
+        elif sort_order == 'a':
+            return Post.objects.filter(activo=True).order_by('titulo')
+        elif sort_order == 'z':
+            return Post.objects.filter(activo=True).order_by('-titulo')
+        else:
+            return Post.objects.filter(activo=True).order_by('-fecha')
 
 
 class PostDetailView(DetailView):
@@ -25,7 +41,7 @@ class PostDetailView(DetailView):
     context_object_name = "posts"
     pk_url_kwarg = "id"
     queryset = Post.objects.all()
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ComentarioForm()
@@ -56,9 +72,29 @@ class ComentarioCreateView(LoginRequiredMixin, CreateView):
         form.instance.posts_id = self.kwargs['posts_id']
         return super().form_valid(form)
 
+
 def postUser(request):
-    postsUser = Post.objects.filter(usuario = request.user)
-    return render(request , 'posts/Misposts.html',{'posts':postsUser})
+    postsUser = Post.objects.filter(usuario=request.user)
+    sort_param = request.GET.get('sort')
+    if sort_param == 'asc':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('fecha')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'desc':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('-fecha')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'a':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('titulo')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    elif sort_param == 'z':
+        postsorder = Post.objects.filter(
+            usuario=request.user).order_by('-titulo')
+        return render(request, 'posts/Misposts.html', {'posts': postsorder})
+    else:
+        return render(request, 'posts/Misposts.html', {'posts': postsUser})
+
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
@@ -79,8 +115,9 @@ def editarPost(request, id):
             post.save()
             messages.success(request, 'El post ha sido editado correctamente.')
             return redirect('apps.posts:postindividual', id=id)
-    
-    return render(request, 'posts/editarPost.html', {'form': form , 'post':post.id})
+
+    return render(request, 'posts/editarPost.html', {'form': form, 'post': post.id})
+
 
 def index(request):
     categorias = Categoria.objects.all()
@@ -110,12 +147,13 @@ def existe_categoria(id):
             return i
     return None
 
+
 def agregarPost(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post =form.save(commit=False)
-            ##Trae al Usuario Logeado
+            post = form.save(commit=False)
+            # Trae al Usuario Logeado
             post.usuario = request.user
             post.save()
             post.clean()
@@ -123,6 +161,7 @@ def agregarPost(request):
     else:
         form = PostForm()
     return render(request, 'posts/crear.html', {'form': form})
+
 
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
