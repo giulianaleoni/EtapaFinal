@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from apps.usuario.models import Usuario
+from django.shortcuts import render
 from django.conf import settings
+
 # Create your models here.
 
 
@@ -27,13 +29,19 @@ class Post(models.Model):
     imagen = models.ImageField(
         null=True, blank=True, upload_to='media/', default='static/post_default.png')
     publicado = models.DateTimeField(default=timezone.now)
-    usuario = models.ForeignKey(Usuario, on_delete= models.CASCADE,)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,)
 
     class Meta:
-        ordering = ('-publicado',)
+        ordering = ['-publicado']
 
     def __str__(self):
         return self.titulo
+
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
 
     def delete(self, using=None, keep_parents=False):
         self.imagen.delete(self.imagen.name)
@@ -45,6 +53,12 @@ class Comentario(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios')
     texto = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
+
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
 
     def __str__(self):
         return self.texto
