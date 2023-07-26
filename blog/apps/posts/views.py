@@ -8,6 +8,7 @@ from .models import Post , Categoria, Comentario
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -36,7 +37,7 @@ class PostDetailView(DetailView):
         if form.is_valid():
             comentario = form.save(commit=False)
             comentario.usuario = request.user
-            comentario.post_id = self.kwargs['id']
+            comentario.posts_id = self.kwargs['id']
             comentario.save()
             return redirect('apps.posts:postindividual', id=self.kwargs['id'])
         else:
@@ -61,6 +62,11 @@ def postUser(request):
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
+#comprueba el permiso de edicion
+    if not post.puede_editar(request.user):
+        messages.error(request, 'No tienes permiso para editar este post.')
+        return redirect('apps.posts:postindividual', id=id)
+
     form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo, 'texto': post.texto, 'categoria':post.categoria, 'imagen':post.imagen})
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -71,6 +77,7 @@ def editarPost(request, id):
             post.categoria = form.cleaned_data['categoria']
             post.imagen = form.cleaned_data['imagen']
             post.save()
+            messages.success(request, 'El post ha sido editado correctamente.')
             return redirect('apps.posts:postindividual', id=id)
     
     return render(request, 'posts/editarPost.html', {'form': form , 'post':post.id})
@@ -120,8 +127,14 @@ def agregarPost(request):
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
+# Comprueba permisos de eliminación
+    if not post.puede_eliminar(request.user):
+        messages.error(request, 'No tienes permiso para eliminar este post.')
+        return redirect('apps.posts:posts')
+##
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'El post ha sido eliminado correctamente.')
         return redirect('apps.posts:posts')
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
