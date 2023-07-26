@@ -35,6 +35,12 @@ class Post(models.Model):
     def __str__(self):
         return self.titulo
 
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
+
     def delete(self, using=None, keep_parents=False):
         self.imagen.delete(self.imagen.name)
         super().delete()
@@ -45,6 +51,12 @@ class Comentario(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comentarios')
     texto = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
+
+    def puede_editar(self, user):
+        return user.es_colaborador or user == self.usuario
+
+    def puede_eliminar(self, user):
+        return user.es_colaborador or user == self.usuario
 
     def __str__(self):
         return self.texto
