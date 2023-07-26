@@ -125,3 +125,21 @@ def eliminarPost(request, id):
         return redirect('apps.posts:posts')
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
+
+def editar_comentario(request, post_id, comentario_id):
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+            return redirect('apps.posts:postindividual', id=post_id)
+    else:
+        form = ComentarioForm(instance=comentario)
+    return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
+
+def eliminar_comentario(request, post_id, comentario_id):
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if request.method == 'POST':
+        comentario.delete()
+        return redirect('apps.posts:postindividual', id=post_id)  # Corregimos el nombre de la ruta aquí
+    return render(request, 'comentarios/eliminar_comentario.html', {'comentario': comentario, 'post_id': post_id})
