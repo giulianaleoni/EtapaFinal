@@ -40,8 +40,8 @@
             {% endif %}
                 <div class="container">
                     <div class="row p-5">
-                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-                            <img class="img-fluid" src="{{ p.imagen.url }}" alt="">
+                        <div class="mx-auto col-md-8 col-lg-6 order-lg-last ">
+                            <img class="img-fluid" src="{{ p.imagen.url }}" alt="" style=" object-fit: cover;">
                         </div>
                         <div class="col-lg-6 mb-0 d-flex align-items-center">
                             <div class="text-align-left align-self-center">
@@ -63,18 +63,20 @@
         </div>
             {% endfor %}        
         
-    </div>
+        </div>
     </div>
     <!-- End Banner Hero -->
     <div class="container text-center border rounded">
         <h4 class="text-primary p-3">Explora Nuestras Categorias</h4>
+        <div class="row d-flex justify-content-evenly">
         {% for i in categorias %}
-        <div class="row ">
-            <a href="{% url 'apps.posts:categoria' i.id %}" class="col-xs-12  col-md col-sm my-3 p-3 mx-1 btn btn-success fw-semibold">{{ i.nombre }}</a>
+        <div class="col-lg-4 col-md-4 col-sm-4 my-1 ">
+            <a href="{% url 'apps.posts:categoria' i.id %}" class="p-3 w-100  btn btn-success fw-semibold">{{ i.nombre }}</a>
         </div>
         {% empty %}
         <span class="text-warning py-3 fw-semibold fs-2"> No Hay Categorias Registradas por el momento</span>
         {% endfor %}
+    </div>
     </div>
 
 {%endblock contenido%}

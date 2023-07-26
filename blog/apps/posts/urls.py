@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListView, PostDetailView,index,requestCategoria, postUser
+from .views import PostListView, PostDetailView,index,requestCategoria, postUser,agregarCategoria
 from . import views
 
 app_name = 'apps.posts'
@@ -13,5 +13,6 @@ urlpatterns = [
     path('posts/editarPost/<int:id>/', views.editarPost, name='editar'),
     path('post/crear/',views.agregarPost, name='agregar'),
     path('posts/eliminar/<int:id>/', views.eliminarPost, name='eliminar'),
+    path('categoria/', agregarCategoria, name='creacategoria'),
 ]
 

@@ -1,6 +1,6 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm  # Asegúrate de crear este formulario
+from .forms import PostForm, CategoriaForm # Asegúrate de crear este formulario
 from .models import Post , Categoria
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
@@ -91,3 +91,13 @@ def eliminarPost(request, id):
         return redirect('apps.posts:posts')
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
+
+def agregarCategoria(request):
+    if request.method == 'POST':
+        form =CategoriaForm(request.POST)
+        if form.is_valid():
+                form.save()
+                return redirect('apps.posts:postUser')
+    else:
+        form = CategoriaForm()
+    return render(request, 'posts/crearcategoria.html', {'form': form})

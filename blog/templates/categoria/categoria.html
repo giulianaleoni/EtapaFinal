@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block contenido %}
-<h5 class="lead display-5 text-center text-primary fw-semibold">
+<h5 class="lead display-5 text-center text-primary fw-bold my-2 border-bottom" >
     {{ categoria.nombre }}
 </h5>
-<div class="row">
+<div class="row d-flex justify-content-evenly w-100">
 {% for i in posts %}
-    <div class="card col-6 text-center m-1" style="width: 20rem;">
-        <img src="{{ i.imagen.url}}" class="card-img-top img-fluid rounded float-start text-center" alt="...">
+    <div class="card gap-2 col-md-2 col-sm-8 text-center border-0" >
+        <img src="{{ i.imagen.url}}" class=" card-img-top img-fluid rounded bg-secondary h-50 " alt="IMAGEN" style="object-fit:cover ;" >
         <div class="card-body">
             <h5 class="card-title">{{ i.titulo }}</h5>
             <p class="card-text">{{ i.subtitulo }}</p>
@@ -15,7 +15,7 @@
         </div>
     </div>
 {% empty %}
-<p>No hay</p>
+<span class="text-center text-warning fw-semibold ">Actualmente No hay Ningun Post relacionado a esta categoria</span>
 {% endfor %}
 </div>
 {% endblock %}

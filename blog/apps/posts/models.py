@@ -6,7 +6,7 @@ from apps.usuario.models import Usuario
 
 # Categoria
 class Categoria(models.Model):
-    nombre = models.CharField(max_length=30, null=False)
+    nombre = models.CharField(max_length=30, null=False,unique=True)
 
     class Meta:
         ordering = ('-nombre',)
