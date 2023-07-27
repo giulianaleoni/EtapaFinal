@@ -3,8 +3,7 @@ from typing import Any, Dict
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
-from .forms import PostForm, ComentarioForm  # Asegúrate de crear este formulario
+from .forms import PostForm, ComentarioForm , CategoriaForm  # Asegúrate de crear este formulario
 from .models import Post , Categoria, Comentario
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
@@ -100,7 +99,7 @@ def postUser(request):
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
-#comprueba el permiso de edicion
+    #comprueba el permiso de edicion
     if not post.puede_editar(request.user):
         messages.error(request, 'No tienes permiso para editar este post.')
         return redirect('apps.posts:postindividual', id=id)
@@ -134,8 +133,8 @@ def requestCategoria(request, id):
         categoria = existe_categoria(id)
         posts = Post.objects.all().filter(categoria=id)
     except Exception:
-         categoria = Categoria.objects.get(id=id)
-         posts = Post.objects.all().filter(categoria=id)
+        categoria = Categoria.objects.get(id=id)
+        posts = Post.objects.all().filter(categoria=id)
     context = {
         'categoria': categoria,
         'posts': posts
@@ -180,6 +179,16 @@ def eliminarPost(request, id):
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
 
+def agregarCategoria(request):
+    if request.method == 'POST':
+        form =CategoriaForm(request.POST)
+        if form.is_valid():
+                form.save()
+                return redirect('apps.posts:postUser')
+    else:
+        form = CategoriaForm()
+    return render(request, 'posts/crearcategoria.html', {'form': form})
+
 def editar_comentario(request, post_id, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
     if not comentario.puede_editar(request.user):
@@ -216,3 +225,4 @@ def eliminar_comentario(request, post_id, comentario_id):
         comentario.delete()
         return redirect('apps.posts:postindividual', id=post_id)  # Corregimos el nombre de la ruta aquí
     return render(request, 'comentarios/eliminar_comentario.html', {'comentario': comentario, 'post_id': post_id})
+

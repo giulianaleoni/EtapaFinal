@@ -12,17 +12,11 @@ class Usuario(AbstractUser):
     #def get_absolute_url(self):
     #    return reverse('index')
 
-    def es_visitante(self):
-        return not self.is_authenticated
+    # def puede_editar_post(self, post):
+    #     return self.es_colaborador or self == post.usuario
 
-    def es_miembro(self):
-        return self.is_authenticated and not self.es_colaborador
-
-    def puede_editar_post(self, post):
-        return self.es_colaborador or self == post.usuario
-
-    def puede_eliminar_post(self, post):
-        return self.es_colaborador or self == post.usuario
+    # def puede_eliminar_post(self, post):
+    #     return self.es_colaborador or self == post.usuario
 
     def __str__(self):
         return self.username
