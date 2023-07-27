@@ -71,6 +71,8 @@ class ComentarioCreateView(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         form.instance.posts_id = self.kwargs['posts_id']
         return super().form_valid(form)
+    
+    
 
 
 def postUser(request):
@@ -180,7 +182,10 @@ def eliminarPost(request, id):
 
 def editar_comentario(request, post_id, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
+    if not comentario.puede_editar(request.user):
+        return redirect('apps.posts:postindividual', id=post_id)
     if request.method == 'POST':
+        print('pasamos')
         form = ComentarioForm(request.POST, instance=comentario)
         if form.is_valid():
             form.save()
@@ -189,8 +194,24 @@ def editar_comentario(request, post_id, comentario_id):
         form = ComentarioForm(instance=comentario)
     return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
 
+###
+# def editar_comentario(request, post_id, comentario_id):
+#     comentario = get_object_or_404(Comentario, id=comentario_id)
+#     if request.method == 'POST' and comentario.puede_editar(request.user):  
+#         form = ComentarioForm(request.POST, instance=comentario)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('apps.posts:postindividual', id=post_id)
+#     else:
+#         return redirect('apps.posts:postindividual', id=post_id)
+#         #form = ComentarioForm(instance=comentario)
+#     return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
+
+
 def eliminar_comentario(request, post_id, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
+    if not comentario.puede_eliminar(request.user):
+        return redirect('apps.posts:postindividual', id=post_id)
     if request.method == 'POST':
         comentario.delete()
         return redirect('apps.posts:postindividual', id=post_id)  # Corregimos el nombre de la ruta aquí
