@@ -70,6 +70,8 @@ class ComentarioCreateView(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         form.instance.posts_id = self.kwargs['posts_id']
         return super().form_valid(form)
+    
+    
 
 
 def postUser(request):
@@ -85,7 +87,7 @@ def postUser(request):
         return render(request, 'posts/Misposts.html', {'posts': postsorder})
     elif sort_param == 'a':
         postsorder = Post.objects.filter(
-            usuario=request.user).order_by('titulo')
+            usuario=request.user).order_by('titulo') 
         return render(request, 'posts/Misposts.html', {'posts': postsorder})
     elif sort_param == 'z':
         postsorder = Post.objects.filter(
@@ -131,8 +133,8 @@ def requestCategoria(request, id):
         categoria = existe_categoria(id)
         posts = Post.objects.all().filter(categoria=id)
     except Exception:
-        categoria = Categoria.objects.get(id=id)
-        posts = Post.objects.all().filter(categoria=id)
+         categoria = Categoria.objects.get(id=id)
+         posts = Post.objects.all().filter(categoria=id)
     context = {
         'categoria': categoria,
         'posts': posts
@@ -165,11 +167,11 @@ def agregarPost(request):
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
-# Comprueba permisos de eliminación
+ # Comprueba permisos de eliminación
     if not post.puede_eliminar(request.user):
         messages.error(request, 'No tienes permiso para eliminar este post.')
         return redirect('apps.posts:posts')
-##
+ ##
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'El post ha sido eliminado correctamente.')
@@ -186,3 +188,41 @@ def agregarCategoria(request):
     else:
         form = CategoriaForm()
     return render(request, 'posts/crearcategoria.html', {'form': form})
+
+def editar_comentario(request, post_id, comentario_id):
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if not comentario.puede_editar(request.user):
+        return redirect('apps.posts:postindividual', id=post_id)
+    if request.method == 'POST':
+        print('pasamos')
+        form = ComentarioForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+            return redirect('apps.posts:postindividual', id=post_id)
+    else:
+        form = ComentarioForm(instance=comentario)
+    return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
+
+###
+# def editar_comentario(request, post_id, comentario_id):
+#     comentario = get_object_or_404(Comentario, id=comentario_id)
+#     if request.method == 'POST' and comentario.puede_editar(request.user):  
+#         form = ComentarioForm(request.POST, instance=comentario)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('apps.posts:postindividual', id=post_id)
+#     else:
+#         return redirect('apps.posts:postindividual', id=post_id)
+#         #form = ComentarioForm(instance=comentario)
+#     return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
+
+
+def eliminar_comentario(request, post_id, comentario_id):
+    comentario = get_object_or_404(Comentario, id=comentario_id)
+    if not comentario.puede_eliminar(request.user):
+        return redirect('apps.posts:postindividual', id=post_id)
+    if request.method == 'POST':
+        comentario.delete()
+        return redirect('apps.posts:postindividual', id=post_id)  # Corregimos el nombre de la ruta aquí
+    return render(request, 'comentarios/eliminar_comentario.html', {'comentario': comentario, 'post_id': post_id})
+
