@@ -97,7 +97,7 @@ def postUser(request):
 
 def editarPost(request, id):
     post = get_object_or_404(Post, id=id)
-#comprueba el permiso de edicion
+    #comprueba el permiso de edicion
     if not post.puede_editar(request.user):
         messages.error(request, 'No tienes permiso para editar este post.')
         return redirect('apps.posts:postindividual', id=id)

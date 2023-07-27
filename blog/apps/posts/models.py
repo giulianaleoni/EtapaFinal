@@ -38,10 +38,10 @@ class Post(models.Model):
         return self.titulo
 
     def puede_editar(self, user):
-        return user.es_colaborador or user == self.usuario
+        return user.es_colaborador and user == self.usuario
 
     def puede_eliminar(self, user):
-        return user.es_colaborador or user == self.usuario
+        return user.es_colaborador and user == self.usuario
 
     def delete(self, using=None, keep_parents=False):
         self.imagen.delete(self.imagen.name)
@@ -55,10 +55,10 @@ class Comentario(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def puede_editar(self, user):
-        return user.es_colaborador or user == self.usuario
+        return  user == self.usuario
 
     def puede_eliminar(self, user):
-        return user.es_colaborador or user == self.usuario
+        return (user == self.usuario) or (self.posts.usuario == user)
 
     def __str__(self):
         return self.texto
