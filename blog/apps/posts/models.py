@@ -44,7 +44,9 @@ class Post(models.Model):
         return user.es_colaborador and user == self.usuario
 
     def delete(self, using=None, keep_parents=False):
-        self.imagen.delete(self.imagen.name)
+        print(self.imagen.name)
+        if self.imagen.name != 'static/post_default.png':
+            self.imagen.delete(self.imagen.name)
         super().delete()
 
 
@@ -55,10 +57,10 @@ class Comentario(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def puede_editar(self, user):
-        return user == self.usuario
+        return  user == self.usuario
 
     def puede_eliminar(self, user):
-        return  (user == self.usuario) or (self.posts.usuario == user)
+        return (user == self.usuario) or (self.posts.usuario == user)
 
     def __str__(self):
         return self.texto

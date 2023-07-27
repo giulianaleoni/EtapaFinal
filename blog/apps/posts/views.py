@@ -133,8 +133,8 @@ def requestCategoria(request, id):
         categoria = existe_categoria(id)
         posts = Post.objects.all().filter(categoria=id)
     except Exception:
-         categoria = Categoria.objects.get(id=id)
-         posts = Post.objects.all().filter(categoria=id)
+        categoria = Categoria.objects.get(id=id)
+        posts = Post.objects.all().filter(categoria=id)
     context = {
         'categoria': categoria,
         'posts': posts
