@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Comentario{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <h1>Editar Comentario</h1>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      <a href="{% url 'apps.posts:postindividual' post_id %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}
