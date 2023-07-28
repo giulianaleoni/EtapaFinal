@@ -24,7 +24,7 @@
     <div class="container mt-5 ">
         <h1 class="text-center text-success">Mis Posts</h1>
         {% if user.is_authenticated and user.es_colaborador %}
-        <a href="{% url 'apps.posts:agregar' %}" class="btn btn-primary rounded-pill" style="float: left;">Agregar</a>
+        <a href="{% url 'apps.posts:agregar_post' %}" class="btn btn-primary rounded-pill" style="float: left;">Agregar</a>
         {% endif %}
         <!-- BOTON DESPLEGABLE ORDENAR POR... -->
         <div class="my-3 d-grid gap-2 d-md-flex justify-content-md-end">

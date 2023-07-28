@@ -1,17 +1,15 @@
 
-from typing import Any, Dict
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm, ComentarioForm , CategoriaForm  # Asegúrate de crear este formulario
 from .models import Post , Categoria, Comentario
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView , View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.urls import reverse
+from django.forms.models import model_to_dict
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -36,7 +34,7 @@ class PostListView(ListView):
         else:
             return Post.objects.filter(activo=True).order_by('-fecha')
 
-@method_decorator(login_required, name='dispatch')
+#@method_decorator(login_required, name='dispatch')
 class PostDetailView(DetailView):
     model = Post
     template_name = "posts/postindividual.html"
@@ -48,8 +46,7 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = ComentarioForm()
         context['comentarios'] = Comentario.objects.filter(posts_id = self.kwargs['id'])
-        return context
-       
+        return context       
     def post(self, request, *args, **kwargs):
         form = ComentarioForm(request.POST)
         if form.is_valid():
@@ -152,29 +149,14 @@ def existe_categoria(id):
     return None
 
 
-def agregarPost(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            # Trae al Usuario Logeado
-            post.usuario = request.user
-            post.save()
-            post.clean()
-            return redirect('apps.posts:posts')
-    else:
-        form = PostForm()
-    return render(request, 'posts/crear.html', {'form': form})
-
-
 def eliminarPost(request, id):
     post = get_object_or_404(Post, id=id)
 
- # Comprueba permisos de eliminación
+    # Comprueba permisos de eliminación
     if not post.puede_eliminar(request.user):
         messages.error(request, 'No tienes permiso para eliminar este post.')
         return redirect('apps.posts:posts')
- ##
+    ##
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'El post ha sido eliminado correctamente.')
@@ -182,15 +164,7 @@ def eliminarPost(request, id):
 
     return render(request, 'posts/eliminarPost.html', {'post': post})
 
-def agregarCategoria(request):
-    if request.method == 'POST':
-        form =CategoriaForm(request.POST)
-        if form.is_valid():
-                form.save()
-                return redirect('apps.posts:postUser')
-    else:
-        form = CategoriaForm()
-    return render(request, 'posts/crearcategoria.html', {'form': form})
+
 
 def editar_comentario(request, post_id, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
@@ -206,20 +180,6 @@ def editar_comentario(request, post_id, comentario_id):
         form = ComentarioForm(instance=comentario)
     return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
 
-###
-# def editar_comentario(request, post_id, comentario_id):
-#     comentario = get_object_or_404(Comentario, id=comentario_id)
-#     if request.method == 'POST' and comentario.puede_editar(request.user):  
-#         form = ComentarioForm(request.POST, instance=comentario)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('apps.posts:postindividual', id=post_id)
-#     else:
-#         return redirect('apps.posts:postindividual', id=post_id)
-#         #form = ComentarioForm(instance=comentario)
-#     return render(request, 'comentarios/editar_comentario.html', {'form': form, 'post_id': post_id})
-
-
 def eliminar_comentario(request, post_id, comentario_id):
     comentario = get_object_or_404(Comentario, id=comentario_id)
     if not comentario.puede_eliminar(request.user):
@@ -229,3 +189,46 @@ def eliminar_comentario(request, post_id, comentario_id):
         return redirect('apps.posts:postindividual', id=post_id)  # Corregimos el nombre de la ruta aquí
     return render(request, 'comentarios/eliminar_comentario.html', {'comentario': comentario, 'post_id': post_id})
 
+#* Vista de Agregar la Categoria
+class AgregarCategoriaView(View):
+    def get(self, request):
+        form_categoria = CategoriaForm()
+        return render(request, 'posts/agregar_categoria.html', {'form_categoria': form_categoria})
+
+    def post(self, request):
+        form_categoria = CategoriaForm(request.POST)
+        if form_categoria.is_valid():
+            form_categoria.save()
+            #? messages.success(request, 'Categoría guardada exitosamente.')  # Mensaje de confirmación
+            
+            # Limpiar el formulario de Categoria
+            form_categoria = CategoriaForm()
+            
+            # Redireccionar al formulario de Post
+            return redirect('apps.posts:agregar_post')
+        return render(request, 'posts/agregar_categoria.html', {'form_categoria': form_categoria})
+
+#* Clase de la 
+class AgregarPostView(View):
+    def get(self, request):
+        #* Inicia el formulario con los valores anteriormente cargados o sino inicia con NONE
+        form_post = PostForm(initial=request.session.get('post_form_data', None))  # Cargar datos del formulario de Post desde la sesión
+        return render(request, 'posts/agregar_post.html', {'form_post': form_post})
+
+    def post(self, request):
+        if 'btn_post' in request.POST:
+            form_post = PostForm(request.POST, request.FILES)
+            if form_post.is_valid():
+                post = form_post.save(commit=False)
+                post.usuario = request.user
+                post.save()
+                post.clean()
+                request.session['post_form_data'] = None
+            return redirect('apps.posts:posts')
+        #*Si se presiona el boton categoria  guarda los datos del Post en una variable de sesion para su posterior uso, y redirecciona a crear categoria
+        elif 'btn_categoria' in request.POST:
+            #Traer los datos del post y  guardarlos en la sesión
+                post_data =request.POST 
+                request.session['post_form_data'] = post_data
+                print(request.session.get('post_form_data'))
+                return redirect('apps.posts:agregar_cate')
