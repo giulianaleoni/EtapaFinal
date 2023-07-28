@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'apps.usuario',
 ]
 
+LOGIN_URL = 'apps.usuario:login'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

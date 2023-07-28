@@ -3,13 +3,13 @@
 {%block contenido%}
 
 <div class="text-center row "  >
-    <form action="" method="POST" role="form" >
+    <form method="post" action="{% url 'apps.usuario:login' %}{% if next_url %}?next={{ next_url }}{% endif %}">
         {% csrf_token %}
-        <div class=" text-center">
+        <div class="text-center">
             {{ form }}            
-        <button class="btn btn-primary" type="submit">Iniciar sesion</button>
-        <a href="{% url 'apps.usuario:registrar' %}">No tienes cuenta? Click Aqui</a>
-    </div>
+            <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+            <a href="{% url 'apps.usuario:registrar' %}">¿No tienes cuenta? Haz clic aquí</a>
+        </div>
     </form>
 </div>
 <h1>
