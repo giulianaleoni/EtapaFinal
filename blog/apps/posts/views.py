@@ -9,6 +9,9 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.urls import reverse
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -33,7 +36,7 @@ class PostListView(ListView):
         else:
             return Post.objects.filter(activo=True).order_by('-fecha')
 
-
+@method_decorator(login_required, name='dispatch')
 class PostDetailView(DetailView):
     model = Post
     template_name = "posts/postindividual.html"
@@ -46,7 +49,7 @@ class PostDetailView(DetailView):
         context['form'] = ComentarioForm()
         context['comentarios'] = Comentario.objects.filter(posts_id = self.kwargs['id'])
         return context
-    
+       
     def post(self, request, *args, **kwargs):
         form = ComentarioForm(request.POST)
         if form.is_valid():
