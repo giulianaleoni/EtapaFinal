@@ -27,16 +27,19 @@ class RegistrarUsuario(CreateView):
 class LoginUsuario(LoginView):
     template_name = 'registration/login.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next_url'] = self.request.GET.get('next')
+        return context
+
     def get_success_url(self):
-        next_url = self.request.GET.get(
-            'next') or self.request.session.get('next')
+        next_url = self.request.GET.get('next') or self.request.session.get('next')
         if next_url:
             self.request.session.pop('next', None)
             messages.success(self.request, 'Login exitoso.')
             return next_url
         else:
-            messages.success(self.request, 'Login exitoso.'
-                             )
+            messages.success(self.request, 'Login exitoso.')
         return reverse('apps.posts:index')
 
 

@@ -66,8 +66,7 @@
             </form>
             {% else %}
             <h2>Debes iniciar sesión o registrarte para comentar</h2>
-            <a class="btn btn-sucess btn-lg"
-                href="{% url 'apps.usuario:login' %}? next={{ request.path }}#comentario">Iniciar sesión</a>
+            <a class="btn btn-sucess btn-lg" href="{% url 'apps.usuario:login' %}?next={{ request.path }}#comentario">Iniciar sesión</a>
             <input type="hidden" name="next" value="{{request.path}}">
             {% endif %}
         </form>
