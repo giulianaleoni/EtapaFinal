@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 <head>
     <title> {% block title %} {{ posts.titulo }}{% endblock title %} </title>
@@ -61,8 +62,8 @@
             <h2>Deja tu comentario</h2>
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" value="Comentar">
+                {% crispy form %}
+                
             </form>
             {% else %}
             <h2>Debes iniciar sesión o registrarte para comentar</h2>

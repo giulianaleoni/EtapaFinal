@@ -211,8 +211,8 @@ class AgregarCategoriaView(View):
 #* Clase de la 
 class AgregarPostView(View):
     def get(self, request):
-        #* Inicia el formulario con los valores anteriormente cargados o sino inicia con NONE
-        form_post = PostForm(initial=request.session.get('post_form_data', None))  # Cargar datos del formulario de Post desde la sesión
+        # Inicia el formulario con los valores anteriormente cargados o inicia con None si no hay datos en la sesión
+        form_post = PostForm(initial=request.session.get('post_form_data', None))
         return render(request, 'posts/agregar_post.html', {'form_post': form_post})
 
     def post(self, request):
@@ -223,12 +223,19 @@ class AgregarPostView(View):
                 post.usuario = request.user
                 post.save()
                 post.clean()
+
+                # Limpiar la variable de sesión solo cuando el formulario de post es válido
                 request.session['post_form_data'] = None
-            return redirect('apps.posts:posts')
-        #*Si se presiona el boton categoria  guarda los datos del Post en una variable de sesion para su posterior uso, y redirecciona a crear categoria
+
+                return redirect('apps.posts:posts')
+
         elif 'btn_categoria' in request.POST:
-            #Traer los datos del post y  guardarlos en la sesión
-                post_data =request.POST 
-                request.session['post_form_data'] = post_data
-                print(request.session.get('post_form_data'))
-                return redirect('apps.posts:agregar_cate')
+            # Guardar los datos del post en una variable de sesión para su posterior uso
+            post_data = request.POST
+            request.session['post_form_data'] = post_data
+
+            return redirect('apps.posts:agregar_cate')
+
+        # Si se presiona otro botón o se realiza otra acción, simplemente se muestra el formulario de post con los datos de la sesión
+        form_post = PostForm(initial=request.session.get('post_form_data', None))
+        return render(request, 'posts/agregar_post.html', {'form_post': form_post})

@@ -1,19 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load crispy_forms_tags %}
 {% block contenido %}
+
+<style>
+    /* Archivo CSS en el template */
+    .btn-guardar-cambios {
+        display: none;
+    }
+</style>
 
 <form method="post" enctype="multipart/form-data" class="d-grid justify-content-center">
     {% csrf_token %}
     <div>
         <h2>Agregar Post</h2>
-        {{ form_post.as_p }}
-        <button type="submit" name="btn_post" class="btn btn-success">Guardar Post</button>
-    </div>
-    <div class="mt-1" >
-    <p class="text-success">Aun No encuentras tu categoria? Creala!!</p>
-    <button type="submit" name="btn_categoria" class="btn btn-success ">Agregar Categoria</button>
+        {% crispy form_post %}
+        <button type="submit" name="btn_post" class="btn btn-success btn-guardar">Guardar Post</button>
+        <p class="text-success">Aun No encuentras tu categoria? Creala!!</p>
+        <button type="submit" name="btn_categoria" class="btn btn-success">Agregar Categoria</button>
     </div>
 </form>
 
 {% endblock %}
+
+

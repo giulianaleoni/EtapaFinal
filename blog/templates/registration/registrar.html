@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {%block contenido%}
 <div class="container text-start" >
     <h3>{{  mensaje }}</h3>
@@ -7,7 +8,7 @@
         <form action="{{ action_url }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class=" text-start d-grid gap-2">
-            {{ form }}
+                {% crispy form %}
             <button class="btn btn-primary mt-2" style="width: 25%; margin: auto;" type="submit">Registrarse</button>
         </div>
         </form>

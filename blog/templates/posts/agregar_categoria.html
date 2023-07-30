@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block contenido %}
 
@@ -8,7 +9,7 @@
     <div class="text-start row"  style="width: 50%; margin: auto;">
         <h2>Agregar Categoria</h2>
         <div class="gap-2">
-            {{ form_categoria.as_p }}
+            {% crispy form_categoria %}
             <button type="submit" class="btn btn-success">Guardar cambios</button>
             <a href="{% url 'apps.posts:agregar_post'%}" class="btn btn-primary">Volver</a>
         </div>

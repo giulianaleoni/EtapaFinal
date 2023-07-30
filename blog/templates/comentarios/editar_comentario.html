@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Editar Comentario{% endblock %}
 
@@ -7,9 +8,8 @@
     <h1>Editar Comentario</h1>
     <form method="post">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-      <a href="{% url 'apps.posts:postindividual' post_id %}" class="btn btn-secondary">Cancelar</a>
+      {% crispy form %}
+      
     </form>
   </div>
 {% endblock %}
