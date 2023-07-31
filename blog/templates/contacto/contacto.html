@@ -9,7 +9,7 @@
         {% csrf_token %}
         {% crispy form %}
         <div class="text-end mt-3">
-            <button type="submit" class="btn btn-success" id="enviarBtn">Enviar</button>
+            <button type="submit" class="btn btn-success" id="enviarBtn" >Enviar</button>
             <a href="{% url 'apps.posts:index' %}" class="btn btn-primary">Cancelar</a>
         </div>
     </form>
@@ -28,23 +28,32 @@
             // Prevenir el envío predeterminado del formulario
             event.preventDefault();
 
-            // Deshabilitar el botón "Enviar" para evitar envíos múltiples
-            $("#enviarBtn").attr("disabled", true);
+            // Validar el formulario antes de enviarlo
+            if ($("#contactForm")[0].checkValidity()) {
+                // Deshabilitar temporalmente el botón "Enviar" para evitar envíos múltiples
+                $("#enviarBtn").attr("disabled", true);
 
-            // Mostrar SweetAlert2 "Mensaje enviado"
-            Swal.fire({
-                title: 'Mensaje enviado',
-                text: 'Estaremos en contacto',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 2000 // 2 segundos de retardo antes de cerrar automáticamente el cuadro de diálogo
-            });
-
-            // Enviar el formulario manualmente después de mostrar el mensaje
-            setTimeout(function() {
-                $("#contactForm")[0].submit();
-            }, 2000); // Esperar 2 segundos antes de enviar el formulario
+                // Enviar el formulario manualmente después de mostrar el mensaje
+                setTimeout(function() {
+                    // Mostrar SweetAlert2 "Mensaje enviado"
+                    Swal.fire({
+                        title: 'Mensaje enviado',
+                        text: 'Estaremos en contacto',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 2000 // 2 segundos de retardo antes de cerrar automáticamente el cuadro de diálogo
+                    }).then(function () {
+                        // Habilitar nuevamente el botón "Enviar" después de mostrar el mensaje
+                        $("#enviarBtn").attr("disabled", false);
+                        // Enviar el formulario
+                        $("#contactForm")[0].submit();
+                    });
+                }, 1000); // Esperar 2 segundos antes de enviar el formulario
+            } else {
+                // Si el formulario no es válido, mostrar los mensajes de error
+                $("#contactForm")[0].reportValidity();
+            }
         });
     });
 </script>
-{% endblock %}
+{% endblock contenido %}

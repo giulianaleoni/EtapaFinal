@@ -1,19 +1,69 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{%block contenido%}
+{% block contenido %}
 
-<div class="text-center row " style="width: 25%; margin: auto;height: 40vh;" >
-    <form method="post" action="{% url 'apps.usuario:login' %}{% if next_url %}?next={{ next_url }}{% endif %}">
+<div class="text-center row" style="width: 25%; margin: auto; height: 40vh;">
+    <form id="login-form" method="post" action="{% url 'apps.usuario:login' %}{% if next_url %}?next={{ next_url }}{% endif %}">
         {% csrf_token %}
         <div class="text-center">
-            {% crispy form %}           
-            <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+            {% crispy form %}
+            <button class="btn btn-primary" type="submit" id="login-btn">Iniciar sesión</button>
             <a href="{% url 'apps.usuario:registrar' %}">¿No tienes cuenta? Haz clic aquí</a>
         </div>
     </form>
 </div>
-<h1>
-    {{ mensaje }}
-</h1>
-{%endblock contenido%}
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'success' and message|escapejs == 'Logout exitoso' %}
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cierre de sesión exitoso',
+                    
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.getElementById('login-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form submission
+        const form = event.target;
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: form.method,
+            body: formData,
+        })
+        .then(response => {
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    
+                }).then(() => {
+                    window.location.href = "{% url 'apps.posts:index' %}"; // Redirect to desired URL
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de inicio de sesión',
+                    text: 'Usuario o contraseña incorrectos.',
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error durante el inicio de sesión.',
+            });
+        });
+    });
+</script>
+
+{% endblock contenido %}

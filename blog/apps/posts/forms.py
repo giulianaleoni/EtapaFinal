@@ -53,3 +53,4 @@ class ComentarioForm(forms.ModelForm):
         )
 
         self.fields['texto'].label = ''
+        
