@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'apps.posts',
     'apps.contacto',
     'apps.usuario',
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
+
+#Configuracion de Crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_URL = 'apps.usuario:login'
 

@@ -5,7 +5,8 @@ from django.views.generic import CreateView
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from django.contrib.auth import login
+from django.http import JsonResponse
 # Create your views here.
 
 
@@ -32,16 +33,18 @@ class LoginUsuario(LoginView):
         context['next_url'] = self.request.GET.get('next')
         return context
 
-    def get_success_url(self):
-        next_url = self.request.GET.get('next') or self.request.session.get('next')
-        if next_url:
-            self.request.session.pop('next', None)
-            messages.success(self.request, 'Login exitoso.')
-            return next_url
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            messages.success(self.request, 'Inicio de sesión exitoso.')
+            login(self.request, form.get_user())  # Autenticar al usuario
+            next_url = self.request.GET.get('next') or reverse('apps.posts:index')
+            return JsonResponse({'success': True, 'next_url': next_url})
         else:
-            messages.success(self.request, 'Login exitoso.')
-        return reverse('apps.posts:index')
+            return JsonResponse({'success': False, 'message': 'Usuario o contraseña incorrectos.'})
 
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'message': 'Usuario o contraseña incorrectos.'})
 
 class LogoutUsuario(LogoutView):
     template_name = 'registration/logout.html'

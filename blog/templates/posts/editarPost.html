@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block contenido %}
-  <h2>Editar Post</h2>
-  <form action="" enctype="multipart/form-data" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <a href="{% url 'apps.posts:postindividual' post %}" class="btn btn-primary">Cancelar</a>
-    <button type="submit" class="btn btn-success">Guardar cambios</button>
-  </form>
+<div class="container container-center">
+    <h2>Editar Post</h2>
+    <form action="" enctype="multipart/form-data" method="post">
+      {% csrf_token %}
+      {% crispy form %}
+      <a href="{% url 'apps.posts:postindividual' post %}" class="btn btn-primary">Cancelar</a>
+      
+    </form>
+</div>
 {% endblock %}
+
