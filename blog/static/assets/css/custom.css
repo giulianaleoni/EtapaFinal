@@ -1,3 +1,35 @@
 /*
 Custom Css
 */
+
+.navbar-brand.text-success.logo.h1.align-self-center{ color: #2B1773 !important; }
+
+.h1.text-success{ color: #446DA6 !important; }
+
+.btn.btn-success{ color: #dae8fc !important; 
+background-color: #446DA6 !important;
+border-color: #446DA6 !important;}
+
+div.w-100.bg-black.py-3 {
+    background-color: #00030D !important;
+}
+
+.h2.text-success.border-bottom.pb-3.border-light.logo{
+    color: #99BBFF !important;
+}
+
+li.mt-0{
+    background-color: #2B1773;
+}
+
+#template-mo-zay-hero-carousel .carousel-indicators li {
+    background-color: #2B1773;
+}
+
+h2.text-light.border-bottom.pb-3.border-light{
+    color: #99BBFF !important;
+}
+
+main h3.h2{
+    color: #000618 !important;  
+}
