@@ -107,22 +107,23 @@
         {% endfor %}
 
         <a id="comentario"></a>
-
-        <div class="countainer-fluid" style="margin-bottom: 100px;">
-            <form method="POST" style="margin-bottom: 100px; margin-top: 100px;">
-                {% csrf_token %}
-                {% if user.is_authenticated %}
-                <h2>Deja tu comentario</h2>
-                <form method="POST">
-                    {% crispy form %}
+        <div class="container mt-4">
+            <div class="countainer-fluid" style="margin-bottom: 100px;">
+                <form method="POST" style="margin-bottom: 100px; margin-top: 100px;">
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+                    <h2>Deja tu comentario</h2>
+                    <form method="POST">
+                        {% crispy form %}
+                    </form>
+                    {% else %}
+                    <h2>Debes iniciar sesión o registrarte para comentar</h2>
+                    <a class="btn btn-sucess btn-lg"
+                        href="{% url 'apps.usuario:login' %}?next={{ request.path }}#comentario">Iniciar sesión</a>
+                    <input type="hidden" name="next" value="{{request.path}}">
+                    {% endif %}
                 </form>
-                {% else %}
-                <h2>Debes iniciar sesión o registrarte para comentar</h2>
-                <a class="btn btn-sucess btn-lg"
-                    href="{% url 'apps.usuario:login' %}?next={{ request.path }}#comentario">Iniciar sesión</a>
-                <input type="hidden" name="next" value="{{request.path}}">
-                {% endif %}
-            </form>
+            </div>
         </div>
     </div>
 
