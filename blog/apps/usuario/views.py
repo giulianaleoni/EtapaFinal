@@ -1,12 +1,17 @@
 from django.shortcuts import render
 from .forms import RegistroUsuarioform
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import CreateView
+from django.views.generic import CreateView,DeleteView,ListView
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse,reverse_lazy
 from django.contrib.auth import login
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.posts.models import Post,Comentario
+from django.contrib.auth.decorators import login_required
+from .models import Usuario
 # Create your views here.
 
 
@@ -57,6 +62,63 @@ class LogoutUsuario(LogoutView):
     def get_next_page(self):
         return reverse('apps.usuario:login')
 
+class UsuarioListView(LoginRequiredMixin,ListView):
+    model = Usuario
+    template_name = 'usuario/usuario_list.html'
+    context_object_name = 'usuarios'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(is_superuser = True)
+        return queryset
+    
+class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
+    model = Usuario
+    template_name = 'usuario/eliminar_usuario.html'
+    success_url = reverse_lazy('apps.usuario:usuario_list')
+
+    def post(self, request, *args, **kwargs):
+        eliminar_comentarios = request.POST.get('eliminar_comentarios', False)
+        eliminar_posts = request.POST.get('eliminar_posts', False)
+        self.object = self.get_object()
+
+        if not request.user.is_superuser:
+            # Si el usuario no es superuser,mostrar un error de PermisionDenied
+            raise PermissionDenied("No tienes el permiso para eliinar usuarios.")
+
+        if eliminar_comentarios:
+            Comentario.objects.filter(usuario=self.object).delete()
+
+        if eliminar_posts:
+            Post.objects.filter(usuario=self.object).delete()
+
+        messages.success(request, f'Usuario {self.object.username} eliminado correctamente')
+        return self.delete(request, *args, **kwargs)
+    
+
+@login_required
+def eliminar_cuenta(request):
+    if request.method == 'POST':
+        user = request.user
+
+        # Eliminar los comentarios y posts del usuario si es necesario
+        eliminar_comentarios = request.POST.get('eliminar_comentarios', False)
+        eliminar_posts = request.POST.get('eliminar_posts', False)
+
+        if eliminar_comentarios:
+            Comentario.objects.filter(usuario=user).delete()
+
+        if eliminar_posts:
+            Post.objects.filter(usuario=user).delete()
+
+        # Eliminar el usuario
+        user.delete()
+
+        # Redireccionar al inicio de sesión
+        return redirect('apps.usuario:login')
+    else:
+        return render(request, 'usuario/eliminar_cuenta.html')
+    
 
 def acercaDe(request):
     return render(request, 'about.html')

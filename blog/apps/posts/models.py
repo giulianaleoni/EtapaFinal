@@ -30,6 +30,7 @@ class Post(models.Model):
         null=True, blank=True, upload_to='media/', default='static/post_default.png')
     publicado = models.DateTimeField(default=timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,)
+    
 
     class Meta:
         ordering = ['-publicado']
