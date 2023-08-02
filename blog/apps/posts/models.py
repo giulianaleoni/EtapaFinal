@@ -31,6 +31,7 @@ class Post(models.Model):
     publicado = models.DateTimeField(default=timezone.now)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,)
 
+
     class Meta:
         ordering = ['-publicado']
 

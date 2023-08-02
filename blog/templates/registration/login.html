@@ -10,6 +10,9 @@
             {% crispy form %}
             <button class="btn btn-primary" type="submit" id="login-btn">Iniciar sesión</button>
             <a href="{% url 'apps.usuario:registrar' %}">¿No tienes cuenta? Haz clic aquí</a>
+            <div>
+                <a href="{% url 'apps.usuario:password_reset' %}" class="fs-6">¿Olvidaste tu Contraseña? Haz clic aquí</a>
+            </div>
         </div>
     </form>
 </div>

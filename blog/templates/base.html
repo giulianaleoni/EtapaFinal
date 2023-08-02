@@ -8,7 +8,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="apple-touch-icon" href="{% static 'assets/img/apple-icon.png' %}">
     <link rel="shortcut icon" href="{% static 'assets/img/iconpage.png' %}">
 
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
@@ -68,15 +67,27 @@
                                     style="object-fit:contain;width: 2rem;" alt="{{ user.username }}">
                             </p>
                             <ul class="dropdown-menu p-4">
+                                {% if user.is_superuser %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'apps.usuario:usuario_list'%}">Lista de Usuarios</a>
+                                </li>
+                                {% endif %}
+
+                          {% if user.es_colaborador %}
                                 <li>
                                     <a class="dropdown-item" href="{% url 'apps.posts:agregar_post'%}">Nuevo Post</a>
                                 </li>
                                 <li><a class="dropdown-item" href="{% url 'apps.posts:postUser'%}">Tus Posts</a></li>
+
+                                {% endif %}
                                 <li>
                                     <a class="dropdown-item" data-bs-toggle="offcanvas" href="#offcanvasExample"
                                         role="button" aria-controls="offcanvasExample">
                                         Tus Datos
                                     </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'apps.usuario:eliminar_cuenta'%}">Eliminar Cuenta</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'apps.usuario:logout' %}">
@@ -158,17 +169,18 @@
                                 href="https://www.linkedin.com/in/roni-alan-leszczuk-2042261b5/">Roni Alan Leszczuk</a>
                         </li>
 
-                        <li><a class="text-decoration-none" 
-                            href="https://www.linkedin.com/in/giuliana-leoni-532b91232/">Giuliana Leoni</a>
+                        <li><a class="text-decoration-none"
+                                href="https://www.linkedin.com/in/giuliana-leoni-532b91232/">Giuliana Leoni</a>
                         </li>
 
-                        <li><a class="text-decoration-none" href="#">Melisa Martinetti</a></li>
+                        <li><a class="text-decoration-none"
+                                href="https://www.linkedin.com/in/guido-olivera-735929244/">Guido Olivera</a>
+                        </li>
 
-                        <!--
+                    <li><a class="text-decoration-none" href="#">Melisa Martinetti</a></li>      
+                  <!--
                         <li><a class="text-decoration-none" href="#">Agregar Abajo sus Linkedins</a></li>
-                        
-                        <li><a class="text-decoration-none" href="#">P</a></li>
-                        <li><a class="text-decoration-none" href="#">P</a></li>
+
                     -->
                     </ul>
                 </div>
