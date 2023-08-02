@@ -32,7 +32,7 @@
             <div class="container d-flex justify-content-between align-items-center">
 
                 <a class="navbar-brand text-success logo h1 align-self-center" href="{% url 'apps.posts:index' %}">
-                    Robotics G1
+                    Grupo 1
                 </a>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
@@ -73,10 +73,14 @@
                                     <a class="dropdown-item" href="{% url 'apps.usuario:usuario_list'%}">Lista de Usuarios</a>
                                 </li>
                                 {% endif %}
+
+                          {% if user.es_colaborador %}
                                 <li>
                                     <a class="dropdown-item" href="{% url 'apps.posts:agregar_post'%}">Nuevo Post</a>
                                 </li>
                                 <li><a class="dropdown-item" href="{% url 'apps.posts:postUser'%}">Tus Posts</a></li>
+
+                                {% endif %}
                                 <li>
                                     <a class="dropdown-item" data-bs-toggle="offcanvas" href="#offcanvasExample"
                                         role="button" aria-controls="offcanvasExample">
@@ -166,10 +170,13 @@
                                 href="https://www.linkedin.com/in/roni-alan-leszczuk-2042261b5/">Roni Alan Leszczuk</a>
                         </li>
 
-                        <li><a class="text-decoration-none" 
-                            href="https://www.linkedin.com/in/giuliana-leoni-532b91232/">Giuliana Leoni</a>
+                        <li><a class="text-decoration-none"
+                                href="https://www.linkedin.com/in/giuliana-leoni-532b91232/">Giuliana Leoni</a>
                         </li>
 
+                        <li><a class="text-decoration-none"
+                                href="https://www.linkedin.com/in/guido-olivera-735929244/">Guido Olivera</a>
+                        </li>
                         <!--
                         <li><a class="text-decoration-none" href="#">Agregar Abajo sus Linkedins</a></li>
                         
