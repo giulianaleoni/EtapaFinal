@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+
+<head>
+    <title>{% block title %}Crear Cuenta{% endblock title %}</title>
+
+</head>
 {%block contenido%}
 <div class="container text-start" >
     <h3>{{  mensaje }}</h3>

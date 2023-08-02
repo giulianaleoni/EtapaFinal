@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from apps.usuario.models import Usuario
-from django.shortcuts import render
 from django.conf import settings
 
 # Create your models here.

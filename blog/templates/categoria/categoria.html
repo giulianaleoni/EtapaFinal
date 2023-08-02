@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
+<head>
+    <title>{% block title %}Categoria: {{ categoria.nombre }}{% endblock title %}</title>
+
+</head>
 {% block contenido %}
 <h5 class="lead display-5 text-center text-primary fw-bold my-2 border-bottom" >
     {{ categoria.nombre }}
