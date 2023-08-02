@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-5">
+            {% if user.is_superuser  %}
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Eliminar usuario</h1>
+                        <p>¿Estás seguro de que quieres eliminar el usuario "{{ object.username }}"?</p>
+                        <form method="post" id="eliminarForm">
+                            {% csrf_token %}
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" name="eliminar_comentarios" id="eliminar_comentarios">
+                                <label class="form-check-label" for="eliminar_comentarios">Eliminar también los comentarios del usuario</label>
+                            </div>
+                            {% if user.es_colaborador %}
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="eliminar_posts" id="eliminar_posts">
+                                    <label class="form-check-label" for="eliminar_posts">Eliminar los posts del usuario</label>
+                                </div>
+                            {% endif %}
+                            <div class="d-grid gap-2 mt-3">
+                                <input type="submit" class="btn btn-danger" value="Sí, eliminar">
+                                <a href="{% url 'apps.usuario:usuario_list' %}" class="btn btn-secondary">No, cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger mt-5">
+                    <h1 class="alert-heading">Acceso restringido</h1>
+                    <p>Solo usuarios con permisos pueden acceder a esta página.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.getElementById("eliminarForm").addEventListener("submit", function(e) {
+        e.preventDefault(); // Evita que el formulario se envíe automáticamente
+    
+        // Mostrar SweetAlert2 con la alerta de confirmación
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Esta acción eliminará al usuario y su contenido asociado.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Mostrar mensaje de "Usuario eliminado" después de la confirmación
+                Swal.fire({
+                    title: "Usuario eliminado",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+    
+                // Esperar 1.5 segundos y luego enviar el formulario para eliminar al usuario
+                setTimeout(function() {
+                    e.target.submit();
+                }, 1500);
+            }
+        });
+    });
+    </script>
+{% endblock %}
