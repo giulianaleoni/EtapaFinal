@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block contenido %}
+<div class="container text-center p-3">
+<p class="fs-3">Se ha realizado su cambio de  contraseña exitosamente</p>
+<a href="{% url 'apps.usuario:login' %}" class="btn btn-primary">Iniciar sesion</a>
+
+{% endblock %}
+

@@ -6,17 +6,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Usuario(AbstractUser):
     imagen= models.ImageField(null=True,blank=True,upload_to='usuario',default='usuario/user-default.jpg')
-
+    email = models.EmailField(unique= True, blank=False)
     es_colaborador = models.BooleanField(default=False)
-
-    #def get_absolute_url(self):
-    #    return reverse('index')
-
-    # def puede_editar_post(self, post):
-    #     return self.es_colaborador or self == post.usuario
-
-    # def puede_eliminar_post(self, post):
-    #     return self.es_colaborador or self == post.usuario
-
     def __str__(self):
         return self.username
