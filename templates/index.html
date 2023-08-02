@@ -48,7 +48,7 @@
                                 <h1 class="h1 text-success">{{ p.titulo }}</h1>
                                 <h3 class="h2">{{ p.subtitulo }}</h3>
                                 <p>
-                                    {{ p.texto }}
+                                    {{ p.texto|truncatechars:100 }}
                                 </p>
                                 <a href="{% url 'apps.posts:postindividual' p.id%}" class="btn btn-success">Ver Post</a>
                             </div>
