@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Cuenta{% endblock title %}
+
+{% block contenido %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Eliminar Cuenta</h2>
+                    <p class="card-text text-center">
+                        ¿Estás seguro que deseas eliminar tu cuenta?
+                    </p>
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+                        <div class="form-check">
+                            <input type="checkbox" name="eliminar_comentarios" id="eliminar_comentarios"
+                                class="form-check-input">
+                            <label class="form-check-label" for="eliminar_comentarios">Eliminar comentarios</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="eliminar_posts" id="eliminar_posts"
+                                class="form-check-input">
+                            <label class="form-check-label" for="eliminar_posts">Eliminar posts</label>
+                        </div>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
+                            <a href="{% url 'apps.posts:index' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+

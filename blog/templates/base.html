@@ -68,6 +68,11 @@
                                     style="object-fit:contain;width: 2rem;" alt="{{ user.username }}">
                             </p>
                             <ul class="dropdown-menu p-4">
+                                {% if user.is_superuser %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'apps.usuario:usuario_list'%}">Lista de Usuarios</a>
+                                </li>
+                                {% endif %}
                                 <li>
                                     <a class="dropdown-item" href="{% url 'apps.posts:agregar_post'%}">Nuevo Post</a>
                                 </li>
@@ -77,6 +82,9 @@
                                         role="button" aria-controls="offcanvasExample">
                                         Tus Datos
                                     </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'apps.usuario:eliminar_cuenta'%}">Eliminar Cuenta</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'apps.usuario:logout' %}">
