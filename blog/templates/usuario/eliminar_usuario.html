@@ -11,14 +11,12 @@
                         <p>¿Estás seguro de que quieres eliminar el usuario "{{ object.username }}"?</p>
                         <form method="post" id="eliminarForm">
                             {% csrf_token %}
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="eliminar_comentarios" id="eliminar_comentarios">
-                                <label class="form-check-label" for="eliminar_comentarios">Eliminar también los comentarios del usuario</label>
+                            <div class="">
+                                <label>Se eliminaran los comentarios que el usuario haya realizado</label>
                             </div>
                             {% if user.es_colaborador %}
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="eliminar_posts" id="eliminar_posts">
-                                    <label class="form-check-label" for="eliminar_posts">Eliminar los posts del usuario</label>
+                                <div class="">
+                                    <label">Se eliminaran los posts que el usuario haya realizado</label>
                                 </div>
                             {% endif %}
                             <div class="d-grid gap-2 mt-3">
