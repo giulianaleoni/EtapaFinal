@@ -1,17 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render ,redirect
 from .forms import RegistroUsuarioform
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView,DeleteView,ListView
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.urls import reverse,reverse_lazy
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
-from apps.posts.models import Post,Comentario
+from apps.posts.models import Post,Comentario , Usuario
 from django.contrib.auth.decorators import login_required
-from .models import Usuario
+
 # Create your views here.
 
 

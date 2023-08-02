@@ -6,10 +6,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.urls import reverse
-from django.forms.models import model_to_dict
+
 
 # Create your views here.
 app_name = 'apps.posts'
@@ -199,7 +196,9 @@ def eliminar_comentario(request, post_id, comentario_id):
 
 class AgregarCategoriaView(View):
     def get(self, request):
-        if request.user.es_colaborador:
+        usuario = request.user
+
+        if usuario.is_authenticated and usuario.es_colaborador:
             form_categoria = CategoriaForm()
             return render(request, 'posts/agregar_categoria.html', {'form_categoria': form_categoria})
         else:

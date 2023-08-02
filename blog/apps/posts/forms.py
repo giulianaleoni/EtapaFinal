@@ -1,7 +1,7 @@
 from django import forms
 from .models import Post, Comentario, Categoria
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, ButtonHolder, Button, Field, HTML
+from crispy_forms.layout import Layout, Submit, ButtonHolder,Field
 
 
 class PostForm(forms.ModelForm):
