@@ -1,13 +1,13 @@
 from django import forms
-from .models import Post, Comentario,Categoria
+from .models import Post, Comentario, Categoria
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, ButtonHolder,Button,Field,HTML
+from crispy_forms.layout import Layout, Submit, ButtonHolder, Button, Field, HTML
 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['titulo','subtitulo', 'texto','categoria', 'imagen']
+        fields = ['titulo', 'subtitulo', 'texto', 'categoria', 'imagen']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,20 +22,24 @@ class PostForm(forms.ModelForm):
             'texto',
             'categoria',
             'imagen',
-            ButtonHolder(Submit('submit', 'Guardar cambios', css_class='btn btn-success btn-guardar-cambios')),
+            ButtonHolder(Submit('submit', 'Guardar cambios',
+                         css_class='btn btn-success btn-guardar-cambios')),
         )
+
 
 class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
-        fields =['nombre']
+        fields = ['nombre']
+
 
 class ComentarioForm(forms.ModelForm):
     class Meta:
         model = Comentario
         fields = ['texto']
         widgets = {
-            'texto': forms.Textarea(attrs={'rows': 6, 'style': 'width: 1200px;'}),  # Ajusta el ancho según tus necesidades
+            # Ajusta el ancho según tus necesidades
+            'texto': forms.Textarea(attrs={'rows': 6, 'style': 'width: 1200px;'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -46,11 +50,9 @@ class ComentarioForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('texto'),
             ButtonHolder(
-                Submit('submit', 'Guardar Cambios', css_class='btn btn-primary'),
-                Button('cancel', 'Cancelar', css_class='btn btn-primary', onclick="window.history.back();"),
-                css_class='mt-3 text-end'
+                Submit('submit', 'Enviar comentario',
+                       css_class='btn btn-primary'),
             )
         )
 
         self.fields['texto'].label = ''
-        
