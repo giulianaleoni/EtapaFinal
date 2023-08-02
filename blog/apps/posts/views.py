@@ -199,8 +199,11 @@ def eliminar_comentario(request, post_id, comentario_id):
 
 class AgregarCategoriaView(View):
     def get(self, request):
-        form_categoria = CategoriaForm()
-        return render(request, 'posts/agregar_categoria.html', {'form_categoria': form_categoria})
+        if request.user.es_colaborador:
+            form_categoria = CategoriaForm()
+            return render(request, 'posts/agregar_categoria.html', {'form_categoria': form_categoria})
+        else:
+            return redirect('apps.posts:posts')
 
     def post(self, request):
         form_categoria = CategoriaForm(request.POST)
