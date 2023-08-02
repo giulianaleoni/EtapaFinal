@@ -14,15 +14,11 @@
                     </p>
                     <form method="post" class="text-center">
                         {% csrf_token %}
-                        <div class="form-check">
-                            <input type="checkbox" name="eliminar_comentarios" id="eliminar_comentarios"
-                                class="form-check-input">
-                            <label class="form-check-label" for="eliminar_comentarios">Eliminar comentarios</label>
+                        <div>
+                            <label>Se eliminaran los  comentarios que hayas realizado</label>
                         </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="eliminar_posts" id="eliminar_posts"
-                                class="form-check-input">
-                            <label class="form-check-label" for="eliminar_posts">Eliminar posts</label>
+                        <div>
+                            <label>Se eliminaran los posts que hayas realizado</label>
                         </div>
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-danger">Eliminar Cuenta</button>
