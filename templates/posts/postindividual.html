@@ -69,7 +69,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <b class="text-start"> {{ comentario.usuario }}</b>
-                {% if user == comentario.usuario or user == posts.usuario %}
+
 
                 <p></p>
                 <p class="card-text">{{ comentario.texto }}</p>
@@ -89,7 +89,7 @@
 
                     </a>
                     {% endif %}
-
+                    {% if user == comentario.usuario or user == posts.usuario %}
                     <a href="#" class="btn " onclick="eliminarComentario('{{ posts.id }}', '{{ comentario.id }}')"><svg
                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                             class="bi bi-trash3 text-danger " viewBox="0 0 16 16">
