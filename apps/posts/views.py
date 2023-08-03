@@ -107,7 +107,7 @@ def editarPost(request, id):
     form = PostForm(initial={'titulo': post.titulo, 'subtitulo': post.subtitulo,
                     'texto': post.texto, 'categoria': post.categoria, 'imagen': post.imagen})
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             post.titulo = form.cleaned_data['titulo']
             post.subtitulo = form.cleaned_data['subtitulo']
